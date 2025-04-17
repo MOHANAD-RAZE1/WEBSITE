@@ -270,7 +270,10 @@
         if (data && data.players !== undefined) {
           resultDiv.innerHTML = `
             <div style="margin-top: 15px;">
-               <strong>${data.players}</strong> Player${data.players == 1 ? '' : 's'} Around Youس
+               <strong>${data.players}</strong> Player${data.players == 1 ? '' : 's'} Around You
+            </div>
+            <div style="margin-top: 15px;">
+               <strong>Your Code : ${code} </strong>
             </div>
           `;
         } else {
