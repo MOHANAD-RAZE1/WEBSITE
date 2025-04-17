@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RAZE VIP</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg1: #0e0b16;
       --bg2: #1a1a2e;
-      --bg3: #16213e;
-      --bg4: #0f3460;
-      --card-bg: rgba(255,255,255,0.1);
-      --card-shadow: rgba(0,0,0,0.4);
-      --accent-primary: #e94560;
-      --accent-secondary: #533483;
+      --bg3: #000718;
+      --bg4: #000308;
+      --accent-primary: rgba(4, 0, 89, 0.635);
+      --accent-secondary: #0002446f;
     }
     * {
       margin: 0;
@@ -23,68 +21,79 @@
       font-family: 'Poppins', sans-serif;
     }
     body {
-      width: 100%;
       height: 100vh;
-      overflow: hidden;
       background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
       background-size: 400% 400%;
       animation: gradientBG 20s ease infinite;
+      overflow: hidden;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
+
     #star-canvas {
       position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       z-index: 0;
+      top: 0;
+      left: 0;
     }
+
     .container {
       position: relative;
       z-index: 1;
-      background: var(--card-bg);
-      backdrop-filter: blur(8px);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px var(--card-shadow);
-      padding: 40px;
-      max-width: 350px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      max-width: 360px;
       margin: auto;
-      text-align: center;
-      color: #fff;
       top: 50%;
       transform: translateY(-50%);
-      animation: fadeInUp 1s ease-out;
+      padding: 60px 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      text-align: center;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.3s ease forwards;
     }
+
     @keyframes fadeInUp {
-      0% { transform: translateY(20px); opacity: 0; }
-      100% { transform: translateY(-50%); opacity: 1; }
+      to {
+        opacity: 1;
+        transform: translateY(-50%);
+      }
     }
-    .rgb-title {
-      font-weight: 600;
+
+    .title {
       font-size: 1.8rem;
-      margin-bottom: 20px;
-      animation: slideDown 1s ease forwards, rgbColor 5s linear infinite;
+      font-weight: 600;
+      margin-bottom: 25px;
     }
-    @keyframes slideDown {
-      0% { opacity: 0; transform: translateY(-20px); }
-      100% { opacity: 1; transform: translateY(0); }
+
+    .title span {
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 1400% 1400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animateText 40s linear infinite;
     }
-    @keyframes rgbColor {
-      0% { color: red; }
-      25% { color: orange; }
-      50% { color: lime; }
-      75% { color: cyan; }
-      100% { color: red; }
+
+    @keyframes animateText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
+
     .input-group {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
+
     input {
-      width: 100%;
+    width: 100%;
       padding: 12px 15px;
       background: transparent;
       border: none;
@@ -94,63 +103,97 @@
       outline: none;
       transition: border-color 0.3s;
     }
+    @keyframes rgb-border {
+      0% { border-bottom-color: #ff0000; }
+      25% { border-bottom-color: #00ff00; }
+      50% { border-bottom-color: #0000ff; }
+      75% { border-bottom-color: #ffff00; }
+      100% { border-bottom-color: #ff0000; }
+    }
     input:focus {
-      border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet) 1;
-      border-bottom: 2px solid transparent;
-      animation: borderRGB 3s linear infinite;
+       border-bottom: 2px solid;
+      animation: rgb-border 20s linear infinite;
     }
-    @keyframes borderRGB {
-      0% { border-bottom-color: red; }
-      16% { border-bottom-color: orange; }
-      33% { border-bottom-color: yellow; }
-      50% { border-bottom-color: green; }
-      66% { border-bottom-color: cyan; }
-      83% { border-bottom-color: blue; }
-      100% { border-bottom-color: violet; }
+
+    @keyframes rgbBorder {
+      0% { border-image-source: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); }
+      100% { border-image-source: linear-gradient(90deg, violet, blue, cyan, green, yellow, orange, red); }
     }
+
     button {
-      padding: 12px 20px;
-      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+      padding: 12px 40px;
       border: none;
-      border-radius: 50px;
+      border-radius: 10px;
+      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
       color: #fff;
       font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: 0.3s ease;
     }
+
     button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(233,69,96,0.7);
+      box-shadow: 0 0 15px rgba(5, 0, 68, 0.6);
     }
-    #result {
+
+    .result {
       margin-top: 20px;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
+      font-size: 1.2rem;
+      color: #fff;
     }
-    #result.show {
+
+    .notification {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 9999;
+    }
+    .notification.show {
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .notification.hide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
     }
   </style>
 </head>
 <body>
   <canvas id="star-canvas"></canvas>
+
   <div class="container">
-    <div class="rgb-title">★ RAZE VIP ★</div>
+    <div class="title"><span>★ RAZE VIP ★</span></div>
     <div class="input-group">
-      <input type="text" id="codeInput" placeholder="Enter Code (e.g., A8K2Z1)" />
+      <input type="text" id="codeInput" placeholder="Enter Code (e.g. A8K2Z1)" />
     </div>
-    <button onclick="fetchStats()">Get Stats</button>
-    <div id="result"></div>
+    <button id="getBtn">Get Stats</button>
+    <div id="result" class="result"></div>
   </div>
+
+  <div id="notification" class="notification"></div>
+
   <script>
+    // Starfield (زي ما هو)
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
+  
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       initStars();
     }
+  
     function initStars() {
       stars = [];
       for (let i = 0; i < 200; i++) {
@@ -163,6 +206,7 @@
         });
       }
     }
+  
     function drawStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach(star => {
@@ -177,35 +221,65 @@
       });
       requestAnimationFrame(drawStars);
     }
+  
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     drawStars();
-
-    async function fetchStats() {
-      const code = document.getElementById("codeInput").value.trim().toUpperCase();
-      const url = `https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`;
-
+  
+    // Notification
+    function showNotification(message, duration = 3000) {
+      const notif = document.getElementById('notification');
+      notif.textContent = message;
+      notif.classList.add('show');
+      notif.classList.remove('hide');
+      setTimeout(() => {
+        notif.classList.add('hide');
+        notif.classList.remove('show');
+      }, duration);
+    }
+  
+    // Get Stats
+    const btn = document.getElementById('getBtn');
+    const resultDiv = document.getElementById('result');
+  
+    function countUp(el, target) {
+      el.textContent = '0';
+      const duration = 800;
+      const stepTime = Math.abs(Math.floor(duration / (target || 1)));
+      let current = 0;
+      const timer = setInterval(() => {
+        current++;
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, stepTime);
+    }
+  
+    btn.addEventListener('click', async () => {
+      resultDiv.innerHTML = '';
+      const code = document.getElementById('codeInput').value.trim().toUpperCase();
+      if (!code) {
+        showNotification('Please enter a valid code.');
+        return;
+      }
+  
       try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        const resultEl = document.getElementById("result");
+        const url = `https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`;
+        const res = await fetch(url);
+        const data = await res.json();
+  
         if (data && data.players !== undefined) {
-          resultEl.innerHTML = `
-            <p>🧍 Players Around You: <strong>${data.players}</strong></p>
-            <p>🔑 Your Code: <strong>${data.code || code}</strong></p>
+          resultDiv.innerHTML = `
+            <div style="margin-top: 15px;">
+               <strong>${data.players}</strong> Player${data.players == 1 ? '' : 's'} Around Youس
+            </div>
           `;
         } else {
-          resultEl.innerHTML = `<p style="color:red;">No data found for this code.</p>`;
+          showNotification('No data found for this code.');
         }
-        resultEl.classList.add("show");
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        const resultEl = document.getElementById("result");
-        resultEl.innerHTML = `<p style="color:red;">An error occurred. Please try again later.</p>`;
-        resultEl.classList.add("show");
+      } catch {
+        showNotification('Error fetching data. Please try again.');
       }
-    }
+    });
   </script>
 </body>
 </html>
