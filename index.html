@@ -170,20 +170,18 @@
 </head>
 <body>
   <canvas id="star-canvas"></canvas>
-
   <div class="container">
-    <div class="title"><span>★ RAZE VIP ★</span></div>
+    <div class="rgb-title">★ RAZE VIP ★</div>
     <div class="input-group">
-      <input type="text" id="codeInput" placeholder="Enter Code (e.g. A8K2Z1)" />
+      <input type="text" id="codeInput" placeholder="Enter Sync Code">
     </div>
     <button id="getBtn">Get Stats</button>
     <div id="result" class="result"></div>
   </div>
-
-  <div id="notification" class="notification"></div>
+  <div id="notif" class="notification"></div>
 
   <script>
-    // Starfield
+    // Stars
     const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -191,17 +189,13 @@
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      initStars();
-    }
-
-    function initStars() {
       stars = [];
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 150; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          radius: Math.random() * 1.2,
-          speed: Math.random() * 0.5 + 0.2,
+          r: Math.random() * 1.2,
+          speed: Math.random() * 0.6 + 0.2,
           alpha: Math.random()
         });
       }
@@ -211,10 +205,10 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach(star => {
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = `rgba(255,255,255,${star.alpha})`;
+        ctx.shadowBlur = 4;
+        ctx.shadowColor = "#fff";
         ctx.fill();
         star.y -= star.speed;
         if (star.y < 0) star.y = canvas.height;
@@ -227,56 +221,45 @@
     drawStars();
 
     // Notification
-    function showNotification(message, duration = 3000) {
-      const notif = document.getElementById('notification');
-      notif.textContent = message;
+    const notif = document.getElementById('notif');
+    function showNotif(msg) {
+      notif.textContent = msg;
       notif.classList.add('show');
-      notif.classList.remove('hide');
-      setTimeout(() => {
-        notif.classList.add('hide');
-        notif.classList.remove('show');
-      }, duration);
+      setTimeout(() => notif.classList.remove('show'), 3000);
     }
 
-    // Get Stats
-    const btn = document.getElementById('getBtn');
-    const resultDiv = document.getElementById('result');
+    // Fetch Stats
+    document.getElementById('getBtn').addEventListener('click', async () => {
+      const code = document.getElementById('codeInput').value.trim().toUpperCase();
+      const result = document.getElementById('result');
+      result.innerHTML = '';
 
-    function countUp(el, target) {
-      el.textContent = '0';
-      const duration = 800;
-      const stepTime = Math.abs(Math.floor(duration / (target || 1)));
-      let current = 0;
-      const timer = setInterval(() => {
-        current++;
-        el.textContent = current;
-        if (current >= target) clearInterval(timer);
-      }, stepTime);
-    }
-
-    btn.addEventListener('click', async () => {
-      resultDiv.innerHTML = '';
-      const code = document.getElementById('codeInput').value.toUpperCase();
-      if (!code) {
-        showNotification('Please enter a valid code.');
-        return;
-      }
+      if (!code) return showNotif("Please enter a valid code.");
 
       try {
         const res = await fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`);
         const data = await res.json();
-        if (data && data.players !== undefined) {
-          resultDiv.innerHTML = `
-            <div>Players: <span>0</span></div>
-            <div>Bots: <span>0</span></div>
-          `;
-          countUp(resultDiv.children[0].querySelector('span'), data.players);
-          countUp(resultDiv.children[1].querySelector('span'), data.bots);
-        } else {
-          showNotification('No data found for this code.');
+
+        if (!data || !data.players) {
+          showNotif("Code not found or no data.");
+          return;
         }
-      } catch {
-        showNotification('Error fetching data. Please try again.');
+
+        const playersEl = document.createElement('div');
+        playersEl.className = 'stat';
+        playersEl.innerHTML = `Players: <span>${data.players}</span>`;
+        result.appendChild(playersEl);
+
+        if (data.bots !== undefined) {
+          const botsEl = document.createElement('div');
+          botsEl.className = 'stat';
+          botsEl.innerHTML = `Bots: <span>${data.bots}</span>`;
+          result.appendChild(botsEl);
+        }
+
+        showNotif("Data loaded successfully!");
+      } catch (err) {
+        showNotif("Error fetching data.");
       }
     });
   </script>
