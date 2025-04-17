@@ -1,23 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Player Stats</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Galaxy Sync Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* خلفية جالاكسي مع نجوم */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.imgur.com/Y6z3emf.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      overflow: hidden;
+    }
+
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      box-shadow: 
+        100px 200px #fff,
+        1500px 600px #fff,
+        800px 100px #fff,
+        200px 500px #fff,
+        1200px 300px #fff;
+      animation: animateStars 200s linear infinite;
+    }
+
+    @keyframes animateStars {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-2000px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: 15%;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #fff;
+    }
+
+    .code-box {
+      font-size: 24px;
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.3s;
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    }
+
+    .code-box:hover {
+      transform: scale(1.05);
+    }
+
+    .rgb-icon {
+      font-size: 48px;
+      animation: rainbow 5s linear infinite;
+      margin-top: 40px;
+    }
+
+    @keyframes rainbow {
+      0%   { color: red; }
+      25%  { color: yellow; }
+      50%  { color: lime; }
+      75%  { color: cyan; }
+      100% { color: red; }
+    }
+
+    .counter {
+      margin-top: 20px;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 8px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 8px #00f3ff;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: #222;
+      color: #fff;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0ff;
+      display: none;
+      z-index: 999;
+    }
+  </style>
 </head>
 <body>
-  <div id="stars"></div>
-  <div id="stars2"></div>
-  <div id="stars3"></div>
+  <div class="stars"></div>
 
   <div class="container">
-    <h1>🌌 Player Stats Viewer</h1>
-    <input type="text" id="codeInput" placeholder="Enter your code">
-    <button onclick="fetchStats(); startLiveUpdates();">Check</button>
-    <div id="result"></div>
+    <div class="title">Your Sync Code</div>
+    <div class="code-box" onclick="copyCode()">ABC123</div>
+
+    <div class="counter" id="playerCount">Players Nearby: 0</div>
+
+    <div class="rgb-icon">★</div>
   </div>
 
-  <script src="script.js"></script>
+  <div class="toast" id="toast">Code Copied!</div>
+
+  <script>
+    const userCode = "ABC123"; // هيتغير من Firebase
+    const codeBox = document.querySelector('.code-box');
+    const toast = document.getElementById("toast");
+
+    function copyCode() {
+      navigator.clipboard.writeText(userCode).then(() => {
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3000);
+      });
+    }
+
+    function fetchPlayerCount() {
+      fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${userCode}.json`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.players !== undefined) {
+            document.getElementById("playerCount").innerText = `Players Nearby: ${data.players}`;
+          }
+        });
+    }
+
+    setInterval(fetchPlayerCount, 1000);
+    fetchPlayerCount();
+  </script>
 </body>
 </html>
