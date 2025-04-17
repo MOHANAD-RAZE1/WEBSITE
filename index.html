@@ -1,214 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EG HONDA</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      /* Galaxy Background Colors */
-      --bg1: #0e0b16;
-      --bg2: #1a1a2e;
-      --bg3: #16213e;
-      --bg4: #0f3460;
-      /* Card styling */
-      --card-bg: rgba(255,255,255,0.1);
-      --card-shadow: rgba(0,0,0,0.4);
-      /* Accent Colors */
-      --accent-primary: #e94560;
-      --accent-secondary: #533483;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
-      background-size: 400% 400%;
-      animation: gradientBG 20s ease infinite;
-    }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    /* Starfield Canvas */
-    #star-canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-    }
-    .container {
-      position: relative;
-      z-index: 1;
-      background: var(--card-bg);
-      backdrop-filter: blur(8px);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px var(--card-shadow);
-      padding: 40px;
-      max-width: 350px;
-      margin: auto;
-      text-align: center;
-      color: #fff;
-      animation: fadeIn 1s ease-out both;
-      top: 50%; transform: translateY(-50%);
-    }
-    h1 {
-      font-weight: 600;
-      margin-bottom: 20px;
-      font-size: 1.8rem;
-      color: var(--accent-secondary);
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-      animation: slideDown 0.8s ease-out both;
-    }
-    .input-group { margin-bottom: 30px; }
-    input {
-      width: 100%; padding: 12px 15px;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid rgba(255,255,255,0.5);
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    input:focus { border-bottom-color: var(--accent-primary); }
-    input::placeholder { color: rgba(255,255,255,0.7); }
-    button {
-      padding: 12px 20px;
-      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
-      border: none;
-      border-radius: 50px;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(233,69,96,0.7);
-    }
-    .result {
-      margin-top: 20px;
-      opacity: 0;
-      animation: fadeIn 0.6s ease-out 0.5s forwards;
-    }
-    .stat {
-      font-size: 1.5rem;
-      margin: 10px 0;
-      color: var(--accent-primary);
-    }
-    .stat span {
-      font-weight: 600;
-      color: #fff;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Player & Bot Stats</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="star-canvas"></canvas>
-  <div class="container">
-    <h1>Player Stats Viewer</h1>
-    <div class="input-group">
-      <input type="text" id="codeInput" placeholder="Enter Code (e.g., A8K2Z1)" />
-    </div>
-    <button id="getBtn">Get Stats</button>
-    <div id="result" class="result"></div>
-  </div>
-  <script>
-    // Starfield Effect
-    const canvas = document.getElementById('star-canvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initStars();
-    }
-    function initStars() {
-      stars = [];
-      const starCount = 200;
-      for (let i = 0; i < starCount; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 1.2,
-          speed: Math.random() * 0.5 + 0.2,
-          alpha: Math.random()
-        });
-      }
-    }
-    function drawStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = `rgba(255,255,255,${star.alpha})`;
-        ctx.fill();
-        star.y -= star.speed;
-        if (star.y < 0) star.y = canvas.height;
-      });
-      requestAnimationFrame(drawStars);
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    drawStars();
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
-    // Stats Fetch & CountUp
-    const btn = document.getElementById('getBtn');
-    const resultDiv = document.getElementById('result');
-    function countUp(el, target) {
-      el.textContent = '0';
-      const duration = 800;
-      const stepTime = Math.abs(Math.floor(duration / (target || 1)));
-      let current = 0;
-      const timer = setInterval(() => {
-        current++;
-        el.textContent = current;
-        if (current >= target) clearInterval(timer);
-      }, stepTime);
-    }
-    btn.addEventListener('click', async () => {
-      resultDiv.innerHTML = '';
-      resultDiv.style.opacity = 0;
-      const code = document.getElementById('codeInput').value.toUpperCase();
+  <div class="container">
+    <h1>Player & Bot Stats</h1>
+    <input type="text" id="codeInput" placeholder="Enter your code..." />
+    <button onclick="fetchStats()">Check Stats</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function fetchStats() {
+      const code = document.getElementById("codeInput").value.trim();
+      const resultDiv = document.getElementById("result");
+
       if (!code) {
-        resultDiv.innerHTML = '<p>Please enter a valid code.</p>';
-        resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
+        resultDiv.innerHTML = "<p>Please enter a code.</p>";
         return;
       }
+
+      resultDiv.innerHTML = "<p>Loading...</p>";
+
       try {
-        const res = await fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`);
+        // تأكد إن الرابط ده هو نفسه اللي في Firebase
+        const res = await fetch(`https://YOUR_PROJECT_ID.firebaseio.com/playerStats/${code}.json`);
         const data = await res.json();
-        resultDiv.innerHTML = '';
-        if (data && data.players !== undefined) {
-          const playersEl = document.createElement('div');
-          playersEl.classList.add('stat');
-          playersEl.innerHTML = 'Players: <span>0</span>';
-          const botsEl = document.createElement('div');
-          botsEl.classList.add('stat');
-          botsEl.innerHTML = 'Bots: <span>0</span>';
-          resultDiv.appendChild(playersEl);
-          resultDiv.appendChild(botsEl);
-          resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
-          countUp(playersEl.querySelector('span'), data.players);
-          countUp(botsEl.querySelector('span'), data.bots);
+
+        if (!data) {
+          resultDiv.innerHTML = "<p>No data found for this code.</p>";
         } else {
-          resultDiv.innerHTML = '<p>No data found for this code.</p>';
-          resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
+          resultDiv.innerHTML = `
+            <div class="stats-box">
+              <p><strong>Players:</strong> ${data.players}</p>
+              <p><strong>Bots:</strong> ${data.bots}</p>
+            </div>
+          `;
         }
-      } catch {
-        resultDiv.innerHTML = '<p>Error fetching data. Try again.</p>';
-        resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
+      } catch (error) {
+        resultDiv.innerHTML = "<p>Error fetching data. Check console.</p>";
+        console.error(error);
       }
-    });
+    }
   </script>
 </body>
 </html>
