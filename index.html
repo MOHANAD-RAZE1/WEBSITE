@@ -32,7 +32,7 @@
 
       try {
         // تأكد إن الرابط ده هو نفسه اللي في Firebase
-        const res = await fetch(`https://YOUR_PROJECT_ID.firebaseio.com/playerStats/${code}.json`);
+        const res = await fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`);
         const data = await res.json();
 
         if (!data) {
