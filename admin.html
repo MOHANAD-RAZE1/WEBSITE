@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - All Stats</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Admin Stats Dashboard</h1>
+    <div id="allStats"></div>
+  </div>
+
+  <script>
+    async function fetchAllStats() {
+      const url = "https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats.json";
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        let html = "<table><tr><th>Code</th><th>Players</th></tr>";
+        for (const key in data) {
+          html += `<tr><td>${data[key].code}</td><td>${data[key].players}</td></tr>`;
+        }
+        html += "</table>";
+
+        document.getElementById("allStats").innerHTML = html;
+      } catch (error) {
+        document.getElementById("allStats").innerHTML = "<p>Error loading stats.</p>";
+      }
+    }
+
+    fetchAllStats();
+    setInterval(fetchAllStats, 3000); // تحديث كل 3 ثواني
+  </script>
+</body>
+</html>
