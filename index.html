@@ -1,146 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Galaxy Sync Viewer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAZE VIP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet" />
   <style>
-    /* خلفية جالاكسي مع نجوم */
-    body {
+    :root {
+      --bg1: #0e0b16;
+      --bg2: #1a1a2e;
+      --bg3: #000718;
+      --bg4: #000308;
+      --accent-primary: rgba(4, 0, 89, 0.635);
+      --accent-secondary: #0002446f;
+    }
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: url('https://i.imgur.com/Y6z3emf.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
+      background-size: 400% 400%;
+      animation: gradientBG 20s ease infinite;
       overflow: hidden;
     }
-
-    .stars {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      box-shadow: 
-        100px 200px #fff,
-        1500px 600px #fff,
-        800px 100px #fff,
-        200px 500px #fff,
-        1200px 300px #fff;
-      animation: animateStars 200s linear infinite;
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    @keyframes animateStars {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-2000px); }
+    #star-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      top: 0;
+      left: 0;
     }
 
     .container {
       position: relative;
-      z-index: 2;
+      z-index: 1;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      max-width: 360px;
+      margin: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 60px 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
       text-align: center;
-      margin-top: 15%;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.3s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(-50%);
+      }
     }
 
     .title {
-      font-size: 32px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #fff;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 25px;
     }
 
-    .code-box {
-      font-size: 24px;
-      padding: 15px 30px;
-      background: rgba(255, 255, 255, 0.1);
+    .title span {
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 1400% 1400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: animateText 40s linear infinite;
+    }
+
+    @keyframes animateText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+    }
+
+    input {
+    width: 100%;
+      padding: 12px 15px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(255,255,255,0.5);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    @keyframes rgb-border {
+      0% { border-bottom-color: #ff0000; }
+      25% { border-bottom-color: #00ff00; }
+      50% { border-bottom-color: #0000ff; }
+      75% { border-bottom-color: #ffff00; }
+      100% { border-bottom-color: #ff0000; }
+    }
+    input:focus {
+       border-bottom: 2px solid;
+      animation: rgb-border 20s linear infinite;
+    }
+
+    @keyframes rgbBorder {
+      0% { border-image-source: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); }
+      100% { border-image-source: linear-gradient(90deg, violet, blue, cyan, green, yellow, orange, red); }
+    }
+
+    button {
+      padding: 12px 40px;
+      border: none;
       border-radius: 10px;
-      display: inline-block;
+      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+      color: #fff;
+      font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.3s;
-      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+      transition: 0.3s ease;
     }
 
-    .code-box:hover {
-      transform: scale(1.05);
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px rgba(5, 0, 68, 0.6);
     }
 
-    .rgb-icon {
-      font-size: 48px;
-      animation: rainbow 5s linear infinite;
-      margin-top: 40px;
-    }
-
-    @keyframes rainbow {
-      0%   { color: red; }
-      25%  { color: yellow; }
-      50%  { color: lime; }
-      75%  { color: cyan; }
-      100% { color: red; }
-    }
-
-    .counter {
+    .result {
       margin-top: 20px;
-      font-size: 20px;
-      background: rgba(0, 0, 0, 0.4);
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 8px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 0 8px #00f3ff;
+      font-size: 1.2rem;
+      color: #fff;
     }
 
-    .toast {
+    .notification {
       position: fixed;
       bottom: 30px;
-      right: 30px;
-      background-color: #222;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,0,0,0.85);
       color: #fff;
-      padding: 15px 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #0ff;
-      display: none;
-      z-index: 999;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      z-index: 9999;
+    }
+    .notification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .notification.hide {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
     }
   </style>
 </head>
 <body>
-  <div class="stars"></div>
+  <canvas id="star-canvas"></canvas>
 
   <div class="container">
-    <div class="title">Your Sync Code</div>
-    <div class="code-box" onclick="copyCode()">ABC123</div>
-
-    <div class="counter" id="playerCount">Players Nearby: 0</div>
-
-    <div class="rgb-icon">★</div>
+    <div class="title"><span>★ RAZE VIP ★</span></div>
+    <div class="input-group">
+      <input type="text" id="codeInput" placeholder="Enter Code (e.g. A8K2Z1)" />
+    </div>
+    <button id="getBtn">Get Stats</button>
+    <div id="result" class="result"></div>
   </div>
 
-  <div class="toast" id="toast">Code Copied!</div>
+  <div id="notification" class="notification"></div>
 
   <script>
-    const userCode = "ABC123"; // هيتغير من Firebase
-    const codeBox = document.querySelector('.code-box');
-    const toast = document.getElementById("toast");
+    // Starfield
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
 
-    function copyCode() {
-      navigator.clipboard.writeText(userCode).then(() => {
-        toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 3000);
-      });
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initStars();
     }
 
-    function fetchPlayerCount() {
-      fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${userCode}.json`)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.players !== undefined) {
-            document.getElementById("playerCount").innerText = `Players Nearby: ${data.players}`;
-          }
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.2,
+          speed: Math.random() * 0.5 + 0.2,
+          alpha: Math.random()
         });
+      }
     }
 
-    setInterval(fetchPlayerCount, 1000);
-    fetchPlayerCount();
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = `rgba(255,255,255,${star.alpha})`;
+        ctx.fill();
+        star.y -= star.speed;
+        if (star.y < 0) star.y = canvas.height;
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawStars();
+
+    // Notification
+    function showNotification(message, duration = 3000) {
+      const notif = document.getElementById('notification');
+      notif.textContent = message;
+      notif.classList.add('show');
+      notif.classList.remove('hide');
+      setTimeout(() => {
+        notif.classList.add('hide');
+        notif.classList.remove('show');
+      }, duration);
+    }
+
+    // Get Stats
+    const btn = document.getElementById('getBtn');
+    const resultDiv = document.getElementById('result');
+
+    function countUp(el, target) {
+      el.textContent = '0';
+      const duration = 800;
+      const stepTime = Math.abs(Math.floor(duration / (target || 1)));
+      let current = 0;
+      const timer = setInterval(() => {
+        current++;
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, stepTime);
+    }
+
+    btn.addEventListener('click', async () => {
+      resultDiv.innerHTML = '';
+      const code = document.getElementById('codeInput').value.toUpperCase();
+      if (!code) {
+        showNotification('Please enter a valid code.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`);
+        const data = await res.json();
+        if (data && data.players !== undefined) {
+          resultDiv.innerHTML = `
+            <div>Players: <span>0</span></div>
+            <div>Bots: <span>0</span></div>
+          `;
+          countUp(resultDiv.children[0].querySelector('span'), data.players);
+          countUp(resultDiv.children[1].querySelector('span'), data.bots);
+        } else {
+          showNotification('No data found for this code.');
+        }
+      } catch {
+        showNotification('Error fetching data. Please try again.');
+      }
+    });
   </script>
 </body>
 </html>
