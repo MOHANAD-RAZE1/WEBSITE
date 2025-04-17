@@ -180,88 +180,69 @@
   </div>
   <div id="notif" class="notification"></div>
 
-  <script>
-    // Stars
-    const canvas = document.getElementById('star-canvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
+<script>
+  const btn = document.getElementById('getBtn');
+  const resultDiv = document.getElementById('result');
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      stars = [];
-      for (let i = 0; i < 150; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.2,
-          speed: Math.random() * 0.6 + 0.2,
-          alpha: Math.random()
-        });
-      }
+  function countUp(el, target) {
+    el.textContent = '0';
+    const duration = 800;
+    const stepTime = Math.abs(Math.floor(duration / (target || 1)));
+    let current = 0;
+    const timer = setInterval(() => {
+      current++;
+      el.textContent = current;
+      if (current >= target) clearInterval(timer);
+    }, stepTime);
+  }
+
+  btn.addEventListener('click', async () => {
+    resultDiv.innerHTML = '';
+    resultDiv.style.opacity = 0;
+    const code = document.getElementById('codeInput').value.toUpperCase();
+
+    if (!code) {
+      resultDiv.innerHTML = '<p>Please enter a valid code.</p>';
+      resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
+      return;
     }
 
-    function drawStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = "#fff";
-        ctx.fill();
-        star.y -= star.speed;
-        if (star.y < 0) star.y = canvas.height;
-      });
-      requestAnimationFrame(drawStars);
-    }
+    try {
+      const res = await fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`);
+      const data = await res.json();
 
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    drawStars();
-
-    // Notification
-    const notif = document.getElementById('notif');
-    function showNotif(msg) {
-      notif.textContent = msg;
-      notif.classList.add('show');
-      setTimeout(() => notif.classList.remove('show'), 3000);
-    }
-
-    // Fetch Stats
-    document.getElementById('getBtn').addEventListener('click', async () => {
-      const code = document.getElementById('codeInput').value.trim().toUpperCase();
-      const result = document.getElementById('result');
-      result.innerHTML = '';
-
-      if (!code) return showNotif("Please enter a valid code.");
-
-      try {
-        const res = await fetch(`https://mainchat-21f83-default-rtdb.firebaseio.com/playerStats/${code}.json`);
-        const data = await res.json();
-
-        if (!data || !data.players) {
-          showNotif("Code not found or no data.");
-          return;
-        }
-
+      resultDiv.innerHTML = '';
+      
+      if (data && data.players !== undefined) {
+        // Players
         const playersEl = document.createElement('div');
-        playersEl.className = 'stat';
-        playersEl.innerHTML = `Players: <span>${data.players}</span>`;
-        result.appendChild(playersEl);
+        playersEl.classList.add('stat');
+        playersEl.innerHTML = 'Players: <span>0</span>';
+        resultDiv.appendChild(playersEl);
+        countUp(playersEl.querySelector('span'), data.players);
 
+        // Bots (only if exists)
         if (data.bots !== undefined) {
           const botsEl = document.createElement('div');
-          botsEl.className = 'stat';
-          botsEl.innerHTML = `Bots: <span>${data.bots}</span>`;
-          result.appendChild(botsEl);
+          botsEl.classList.add('stat');
+          botsEl.innerHTML = 'Bots: <span>0</span>';
+          resultDiv.appendChild(botsEl);
+          countUp(botsEl.querySelector('span'), data.bots);
         }
 
-        showNotif("Data loaded successfully!");
-      } catch (err) {
-        showNotif("Error fetching data.");
+        resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
+
+      } else {
+        resultDiv.innerHTML = '<p>No data found for this code.</p>';
+        resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
       }
-    });
-  </script>
+
+    } catch {
+      resultDiv.innerHTML = '<p>Error fetching data. Try again.</p>';
+      resultDiv.style.animation = 'fadeIn 0.6s ease-out forwards';
+    }
+  });
+</script>
+
 </body>
 </html>
